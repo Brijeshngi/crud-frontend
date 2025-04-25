@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+// src/App.jsx
+import React, { useContext, useState, useEffect } from "react";
 import {
   Container,
   IconButton,
@@ -10,13 +11,14 @@ import { Brightness4, Brightness7 } from "@mui/icons-material";
 import ProductForm from "./components/ProductForm";
 import ProductTable from "./components/ProductTable";
 import CustomThemeProvider, { ColorModeContext } from "./ThemeContext";
+import LoginForm from "./components/LoginForm";
 
 function AppContent() {
   const [refresh, setRefresh] = React.useState(false);
   const colorMode = useContext(ColorModeContext);
   const mode = localStorage.getItem("mui-mode") || "light";
 
-  React.useEffect(() => {
+  useEffect(() => {
     localStorage.setItem("mui-mode", mode);
   }, [mode]);
 
@@ -42,9 +44,15 @@ function AppContent() {
 }
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("auth-token")
+  );
+
+  const handleLogin = () => setIsLoggedIn(true);
+
   return (
     <CustomThemeProvider>
-      <AppContent />
+      {isLoggedIn ? <AppContent /> : <LoginForm onLogin={handleLogin} />}
     </CustomThemeProvider>
   );
 }
